@@ -2,6 +2,8 @@
 
 -export([add_time/4,
          format/1,
+         this_date_to_now/0,
+         datetime_to_now/1,
          parse/1]).
 
 -export_types([datetime/0,
@@ -9,6 +11,7 @@
 
 -define(MIDNIGHT, {0,0,0}).
 -define(V, proplists:get_value).
+-define(GREGORIAN_SECONDS_1970, 62167219200).
 
 -type datetime() :: tuple(Date::calendar:date(),
                           Time::calendar:time()).
@@ -39,6 +42,16 @@ format({{Y,Mo,D}, {H,Mn,S}}) ->
     FmtStr = "~4.10.0B-~2.10.0B-~2.10.0BT~2.10.0B:~2.10.0B:~2.10.0BZ",
     IsoStr = io_lib:format(FmtStr, [Y, Mo, D, H, Mn, S]),
     list_to_binary(IsoStr).
+
+this_date_to_now() ->
+  datetime_to_now({date(), ?MIDNIGHT}).
+
+-spec datetime_to_now(datetime()) -> term().
+%% @doc Convert datetime() to erlang:now()
+datetime_to_now(Datetime) ->
+  GSeconds = calendar:datetime_to_gregorian_seconds(Datetime),
+  ESeconds = GSeconds - ?GREGORIAN_SECONDS_1970,
+  {ESeconds div 1000000, ESeconds rem 1000000, 0}.
 
 -spec parse (string()) -> datetime().
 %% @doc Convert an ISO 8601 formatted string to a 
