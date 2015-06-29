@@ -4,6 +4,7 @@
          format/1,
          this_date_to_now/0,
          datetime_to_now/1,
+         parse_to_now/1,
          parse/1]).
 
 -export_types([datetime/0,
@@ -52,6 +53,9 @@ datetime_to_now(Datetime) ->
   GSeconds = calendar:datetime_to_gregorian_seconds(Datetime),
   ESeconds = GSeconds - ?GREGORIAN_SECONDS_1970,
   {ESeconds div 1000000, ESeconds rem 1000000, 0}.
+
+parse_to_now(Bin) ->
+  datetime_to_now(parse(Bin)).
 
 -spec parse (string()) -> datetime().
 %% @doc Convert an ISO 8601 formatted string to a 
