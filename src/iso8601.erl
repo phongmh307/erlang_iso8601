@@ -5,6 +5,8 @@
          this_date_to_now/0,
          datetime_to_now/1,
          parse_to_now/1,
+         to_unix_timestamp/0,
+         to_unix_timestamp/2,
          parse/1]).
 
 -export_types([datetime/0,
@@ -56,6 +58,17 @@ datetime_to_now(Datetime) ->
 
 parse_to_now(Bin) ->
   datetime_to_now(parse(Bin)).
+
+to_unix_timestamp() ->
+  to_unix_timestamp(now(), true).
+
+to_unix_timestamp({Mega, Sec, Micro} = _Timestamp, Short) ->
+  case Short of
+    true ->
+      (Mega * 1000000 + Sec);
+    false ->
+      (Mega * 1000000 + Sec) * 1000000 + Micro
+  end.
 
 -spec parse (string()) -> datetime().
 %% @doc Convert an ISO 8601 formatted string to a 
