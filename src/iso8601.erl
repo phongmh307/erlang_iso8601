@@ -7,6 +7,7 @@
          parse_to_now/1,
          to_unix_timestamp/0,
          to_unix_timestamp/2,
+         to_datetime/1,
          parse/1]).
 
 -export_types([datetime/0,
@@ -58,6 +59,9 @@ datetime_to_now(Datetime) ->
 
 parse_to_now(Bin) ->
   datetime_to_now(parse(Bin)).
+
+to_datetime(Seconds) ->
+  calendar:gregorian_seconds_to_datetime(?GREGORIAN_SECONDS_1970 + Seconds).
 
 to_unix_timestamp() ->
   to_unix_timestamp(now(), true).
